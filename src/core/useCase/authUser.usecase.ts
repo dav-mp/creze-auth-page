@@ -1,5 +1,5 @@
 import { AuthService } from '../../services/authService/authService.service';
-import { UserConfirm, UserRegister } from '../interfaces/authInterfaces.interface';
+import { UserConfirm, UserLogin, UserRegister } from '../interfaces/authInterfaces.interface';
 
 
 
@@ -50,6 +50,33 @@ export class AuthUserUseCase{
             throw Error('Error al crear usuario.')
         }
 
+    }
+
+    authUserLogin = async ( user: UserLogin ) => {
+        
+        if (!this.isUserLogin( user )) {
+            throw Error('Datos de usuario no validos.')
+        }
+
+        try {
+            
+            const userConfirm = await this.authService.authUserLogin( user )
+    
+            console.log('userConfirm', userConfirm);
+            
+            return userConfirm
+
+        } catch (error) {
+            throw Error('Error al crear usuario.')
+        }
+
+    }
+
+    private isUserLogin = ( obj: UserLogin ): obj is UserLogin => {
+        return (
+            typeof obj.email === "string" &&
+            typeof obj.password === "string" 
+        );
     }
 
     private isUserConfirm = ( obj: UserConfirm ): obj is UserConfirm => {
