@@ -123,6 +123,12 @@ const UserRegister = () => {
             })
             .finally(() => {
                 setopenLoading(false)
+                setTimeout(() => {
+                    setsnackBarContent({
+                        ...snackBarContent,
+                        isOpen: false,
+                    })
+                }, 6000);
             })
 
 

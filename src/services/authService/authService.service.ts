@@ -77,7 +77,7 @@ export class AuthService{
             
         } catch (error: any) {
             
-            return error.response.data
+            return Promise.reject(error.response.data)
 
         }
       

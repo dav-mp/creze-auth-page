@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { MuiOtpInput } from 'mui-one-time-password-input'
 
 interface OtpInputProps {
-    handleConfirm: ( code: string ) => string
+    handleConfirm: ( code: string ) => void
 }
 
 const OtpInput = ( props: OtpInputProps ) => {
@@ -25,7 +25,6 @@ const OtpInput = ( props: OtpInputProps ) => {
       onComplete={handleComplete}
       length={6}
       autoFocus
-      validateChar={(character: string, index: number) => true}
     />
   )
 }
