@@ -1,6 +1,6 @@
 import axiosAuthInstance from '../axiosAuth/axiosAuthInstance.service'
 import { UserConfirm, UserLogin, UserRegister } from '../../core/interfaces/authInterfaces.interface';
-import axios, { AxiosError } from 'axios';
+// import axios, { AxiosError } from 'axios';
 
 
 export class AuthService{
