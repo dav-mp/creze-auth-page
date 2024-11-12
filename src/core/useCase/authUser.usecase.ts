@@ -21,12 +21,11 @@ export class AuthUserUseCase{
             
             const newUser = await this.authService.authUserRegister( user )
     
-            console.log('newUser', newUser);
-            
             return newUser
 
         } catch (error) {
-            throw Error('Error al crear usuario.')
+            
+            return Promise.reject(error)
         }
 
 
@@ -47,7 +46,7 @@ export class AuthUserUseCase{
             return userConfirm
 
         } catch (error) {
-            throw Error('Error al crear usuario.')
+            return Promise.reject(error)
         }
 
     }
@@ -67,7 +66,7 @@ export class AuthUserUseCase{
             return userConfirm
 
         } catch (error) {
-            throw Error('Error al crear usuario.')
+            return Promise.reject(error)
         }
 
     }
