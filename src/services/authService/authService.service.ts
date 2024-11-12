@@ -1,5 +1,5 @@
 import axiosAuthInstance from '../axiosAuth/axiosAuthInstance.service'
-import { UserConfirm, UserRegister } from '../../core/interfaces/authInterfaces.interface';
+import { UserConfirm, UserLogin, UserRegister } from '../../core/interfaces/authInterfaces.interface';
 import axios, { AxiosError } from 'axios';
 
 
@@ -50,6 +50,27 @@ export class AuthService{
 
         try {
             const response = await axiosAuthInstance.post('/userConfirm', user, {
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            })
+    
+            console.log('CONFIRM CORRECTO', response);
+            
+            return response.data
+            
+        } catch (error: any) {
+            
+            return error.response.data
+
+        }
+      
+    }
+
+    authUserLogin = async ( user: UserLogin ) => {
+
+        try {
+            const response = await axiosAuthInstance.post('/userLogin', user, {
                 headers: {
                     'Content-Type': 'application/json',
                 },

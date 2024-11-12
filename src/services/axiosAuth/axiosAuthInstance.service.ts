@@ -6,18 +6,20 @@ const axiosAuthInstance = axios.create({
   headers: {
     'Content-Type': 'application/json',
   },
+  withCredentials: true
 });
 
 axiosAuthInstance.interceptors.request.use((config) => {
-    
-    config.headers['X-CSRF-Token'] = '1';
-    return config;
-  },
-  (error) => {
-    // Manejo de errores en la solicitud
-    return Promise.reject(error);
+  const csrfToken = document.cookie.split('; ')
+      .find(row => row.startsWith('csrf_token'))
+      ?.split('=')[1];
+
+  if (csrfToken) {
+      config.headers['X-CSRF-Token'] = csrfToken;
   }
-);
+
+  return config;
+}, error => Promise.reject(error));
 
 axiosAuthInstance.interceptors.response.use(
   (response) => {
