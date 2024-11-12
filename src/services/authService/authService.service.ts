@@ -15,33 +15,49 @@ export class AuthService{
                 },
             })
     
-            console.log('REGISTRO CORRECTO', response);
-            
-            return response.data
+            return {data: response.data, error: false}
             
         } catch (error: any) {
-            
-            return error.response.data
-            
-            let errorMessage = 'Error desconocido';
-            if (error.response) {
-                // Acceso al cuerpo de la respuesta de error
-                console.log(error.response.data); // Datos del error devueltos por el servidor
-                console.log(error.response.status); // Código de estado HTTP
-                console.log(error.response.headers); // Cabeceras de la respuesta
-            }
 
-            if (axios.isAxiosError(error)) {
-                const axiosError = error as AxiosError;
-                errorMessage = axiosError.response?.statusText || 'Error en la solicitud';
-            }
+            if( error.code === "ERR_NETWORK") {
 
-            console.error('Error en registro:', errorMessage);
+                return Promise.reject(
+                    {
+                        error: 'service not available'
+                    }
+                )
+            }
+            return Promise.reject(error.response.data)
+            // if( error.code === 400) {
+
+
+            //     return {
+            //         error: 'service not available'
+            //     }
+            // }
+            // console.log(error);
             
-            return {
-                status: false,
-                message: errorMessage,
-            };
+            // return error.response.data
+            
+            // let errorMessage = 'Error desconocido';
+            // if (error.response) {
+            //     // Acceso al cuerpo de la respuesta de error
+            //     console.log(error.response.data); // Datos del error devueltos por el servidor
+            //     console.log(error.response.status); // Código de estado HTTP
+            //     console.log(error.response.headers); // Cabeceras de la respuesta
+            // }
+
+            // if (axios.isAxiosError(error)) {
+            //     const axiosError = error as AxiosError;
+            //     errorMessage = axiosError.response?.statusText || 'Error en la solicitud';
+            // }
+
+            // console.error('Error en registro:', errorMessage);
+            
+            // return {
+            //     status: false,
+            //     message: errorMessage,
+            // };
         }
 
     }
