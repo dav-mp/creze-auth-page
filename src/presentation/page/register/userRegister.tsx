@@ -103,8 +103,7 @@ const UserRegister = () => {
         setopenLoading(true)
 
         AuthRegisterApplication( data )
-            .then(user => {
-                console.log(user);
+            .then(() => {
                 setsnackBarContent({
                     isOpen: true,
                     severity: ServerityLevelSnackbar.SUCCESS,

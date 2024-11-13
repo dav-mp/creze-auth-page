@@ -16,7 +16,7 @@ const UserVerifyMFA: React.FC = () => {
     const { goTo } = useNavigationUtil()
 
     const [allRight, setAllRight] = useState(false)
-    const [userSession, setuserSession] = useState(getUserSessionAction())
+    const [userSession] = useState(getUserSessionAction())
     const [openLoading, setopenLoading] = useState(false)
     const [snackBarContent, setsnackBarContent] = useState<SnackBarProps>({
         isOpen: false,

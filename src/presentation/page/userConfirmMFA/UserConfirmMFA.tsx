@@ -15,7 +15,7 @@ const UserConfirmMFA: React.FC = () => {
     const { goTo } = useNavigationUtil()
 
     const [secretCodeQr, setSecretCodeQr] = useState(getSecretCodeAction())
-    const [sessionToken, setSessionToken] = useState(getUserSessionAction())
+    const [sessionToken] = useState(getUserSessionAction())
     const [openLoading, setopenLoading] = useState(false)
     const [snackBarContent, setsnackBarContent] = useState<SnackBarProps>({
         isOpen: false,

@@ -30,8 +30,7 @@ const UserConfirm: React.FC = () => {
         }
 
         UserConfirmApplication( user )
-            .then(user => {
-                console.log(user);
+            .then(() => {
                 setsnackBarContent({
                     isOpen: true,
                     severity: ServerityLevelSnackbar.SUCCESS,
