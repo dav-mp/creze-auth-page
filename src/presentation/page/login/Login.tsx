@@ -14,14 +14,15 @@ import CircularProgress from '@mui/material/CircularProgress';
 
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
-import { AuthRegisterApplication } from '../../../application/authUser/authUser.application'
+import { UserLoginApplication } from '../../../application/authUser/authUser.application'
 
 import { useForm } from 'react-hook-form';
-import { UserRegister as UserRegisterInterface } from '../../../core/interfaces/authInterfaces.interface';
+import { UserLogin } from '../../../core/interfaces/authInterfaces.interface';
 import SnackBarMessage, { ServerityLevelSnackbar } from '../../components/SnackBar/snackBar';
 import { SnackBarProps } from '../../components/SnackBar/snackBar';
 import { setCookiesData } from '../../../utils/CookiesData';
 import useNavigationUtil from '../../../utils/GotoPath';
+import { useUserActions } from '../../hooks/store/useUserActionsStore';
 
 
 const Card = styled(MuiCard)(({ theme }) => ({
@@ -64,9 +65,10 @@ const Card = styled(MuiCard)(({ theme }) => ({
     },
   }));
 
-const UserRegister = () => {
+const LoginRegister = () => {
 
     const { goTo } = useNavigationUtil()
+    const { addUserTokenAction, addUserSecretCodeAction, addUserSessionAction } = useUserActions()
 
     const [showPassword, setShowPassword] = useState(false);
     const [openLoading, setopenLoading] = useState(false)
@@ -89,30 +91,30 @@ const UserRegister = () => {
         defaultValues: {
             email: "",
             password: "",
-            name: ""
         },
     });
 
-    const { email, password: passwordValue, name } = watch()
+    const { email, password: passwordValue} = watch()
 
     const password = useRef("");
     password.current = watch("password", "");
 
-    const onSubmit = handleSubmit((data: UserRegisterInterface) => {
+    const onSubmit = handleSubmit((data: UserLogin) => {
 
         setopenLoading(true)
 
-        AuthRegisterApplication( data )
+        UserLoginApplication( data )
             .then(user => {
                 console.log(user);
                 setsnackBarContent({
                     isOpen: true,
                     severity: ServerityLevelSnackbar.SUCCESS,
-                    text: "User created successfully."
+                    text: "User successfully logged in."
                 })
                 setCookiesData( data.email )
-                // TODO: Cambiar a userConfirm. Por ahora sera directo a Login por tema de limites de email enviados desde cognito. No se pueden confirmar usuarios
-                goTo( "/login" )
+                addUserTokenAction( { token: user.csrf_token } )
+                goToMFA( user.data[0].message, user.data[0]?.session, user.data[0]?.secretode )
+                // goTo( "/userConfirm" )
             })
             .catch(err => {
                 setsnackBarContent({
@@ -133,6 +135,24 @@ const UserRegister = () => {
 
 
     })
+
+    const goToMFA = ( type: string, session: string, secretCode: string = '' ) => {
+
+        switch (type) {
+            case 'MFA_SETUP':
+                
+                addUserSecretCodeAction( { secretCode } )
+                addUserSessionAction( { session } )
+
+                goTo('/confirmMFA')
+
+                break;
+        
+            default:
+                break;
+        }
+
+    }
   
     return (
         <>
@@ -151,19 +171,10 @@ const UserRegister = () => {
                     variant="h4"
                     sx={{ width: '100%', fontSize: 'clamp(2rem, 10vw, 2.15rem)' }}
                     >
-                    Sign up
+                    Sign in
                     </Typography>
                     <Box component="form" onSubmit={onSubmit} sx={{ mt: 3 }} >
                     <Stack spacing={3}>
-
-                        <TextField 
-                        required
-                        label="name"
-                        value={name} 
-                        {...register("name", { 
-                            required: "name is mandatory",
-                        })}/>
-                        {errors.name && <Typography variant='body1' color={'red'}>{errors.name.message}</Typography>}
 
                         <TextField 
                         required
@@ -221,8 +232,8 @@ const UserRegister = () => {
                         </Button>
                         <Grid container spacing={3}>
                             <Grid item >
-                                <Button variant='text' onClick={() => goTo('/login')} >
-                                    {"Do you already have an account? Log in"}
+                                <Button variant='text' onClick={() => goTo('/')} >
+                                    {"You don't have an account? Register"}
                                 </Button>
                             </Grid>
                         </Grid>
@@ -234,4 +245,4 @@ const UserRegister = () => {
     );
 }
 
-export default UserRegister
+export default LoginRegister

@@ -14,7 +14,6 @@ const OtpInput = ( props: OtpInputProps ) => {
   }
 
   const handleComplete = (finalValue: string) => {
-    console.log(finalValue);
     props.handleConfirm( finalValue )
   }
 
