@@ -1,9 +1,9 @@
 import Cookies from 'js-cookie';
 
 
-export const setCookiesData = ( data: string ) => {
+export const setCookiesData = ( field:string, data: string ) => {
   
-    Cookies.set('email', data, { expires: 7, secure: true, sameSite: 'Strict' });
+    Cookies.set(field, data, { expires: 7, secure: true, sameSite: 'Strict' });
 
 }
 
