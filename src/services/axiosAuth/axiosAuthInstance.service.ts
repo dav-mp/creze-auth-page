@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { store } from '../../redux/store';
 
 const axiosAuthInstance = axios.create({
   baseURL: import.meta.env.VITE_API_URL_AUTH_USER, 
@@ -10,16 +11,16 @@ const axiosAuthInstance = axios.create({
 });
 
 axiosAuthInstance.interceptors.request.use((config) => {
-  const csrfToken = document.cookie.split('; ')
-      .find(row => row.startsWith('csrf_token'))
-      ?.split('=')[1];
+  const state = store.getState();
+  
+  const csrfToken = state.user.token; 
 
   if (csrfToken) {
-      config.headers['X-CSRF-Token'] = csrfToken;
+    config.headers['X-CSRF-Token'] = csrfToken;
   }
 
   return config;
-}, error => Promise.reject(error));
+}, error => console.log(error));
 
 axiosAuthInstance.interceptors.response.use(
   (response) => {
