@@ -15,3 +15,8 @@ export interface UserLogin {
     email: string;
     password: string;
 }
+
+export interface UserConfirmMFA {
+    session: string;
+    userCode: string;
+}

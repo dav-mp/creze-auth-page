@@ -6,6 +6,8 @@ import { ProtectedRouteByEmail } from './ProtectedRouteByEmail';
 
 const Register = lazy(() => import('../presentation/page/register/userRegister'))
 const UserConfirm = lazy(() => import('../presentation/page/userConfirm/UserConfirm'))
+const Login = lazy(() => import('../presentation/page/login/Login'))
+const UserConfirmMFA = lazy(() => import('../presentation/page/userConfirmMFA/UserConfirmMFA'))
 // const Demo = lazy(() => import('../pages/DemoPage'))
 // const NewBorn = lazy(() => import('../pages/NewBorn/NewBorn'))
 
@@ -18,12 +20,12 @@ const AppRouter = () => {
         {/* <Login /> */}
         <Routes>
             <Route path="/" element={<Register />} />
+            <Route path="/login" element={<Login />} />
             {/* <Route path="/login" element={<Login user={user}/>} /> */}
 
             <Route element={<ProtectedRouteByEmail/>}>
-
               <Route path="/userConfirm" element={<UserConfirm />} />
-
+              <Route path="/confirmMFA" element={<UserConfirmMFA />} />
             </Route>
 
             <Route path='*' element={<h1>Sin info</h1>}/>

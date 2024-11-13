@@ -1,5 +1,5 @@
 import { AuthService } from '../../services/authService/authService.service';
-import { UserConfirm, UserLogin, UserRegister } from '../interfaces/authInterfaces.interface';
+import { UserConfirm, UserLogin, UserRegister, UserConfirmMFA } from '../interfaces/authInterfaces.interface';
 
 
 
@@ -41,8 +41,6 @@ export class AuthUserUseCase{
             
             const userConfirm = await this.authService.authUserConfirm( user )
     
-            console.log('userConfirm', userConfirm);
-            
             return userConfirm
 
         } catch (error) {
@@ -61,6 +59,24 @@ export class AuthUserUseCase{
             
             const userConfirm = await this.authService.authUserLogin( user )
     
+            return userConfirm
+
+        } catch (error) {
+            return Promise.reject(error)
+        }
+
+    }
+
+    suthUserConfirmMFA = async ( data: UserConfirmMFA ) => {
+        
+        if (!this.isUserConfirmMFA( data )) {
+            throw Error('Datos de usuario no validos.')
+        }
+
+        try {
+            
+            const userConfirm = await this.authService.authUserConfirmMFA( data )
+    
             console.log('userConfirm', userConfirm);
             
             return userConfirm
@@ -69,6 +85,13 @@ export class AuthUserUseCase{
             return Promise.reject(error)
         }
 
+    }
+
+    private isUserConfirmMFA = ( obj: UserConfirmMFA ): obj is UserConfirmMFA => {
+        return (
+            typeof obj.session === "string" &&
+            typeof obj.userCode === "string" 
+        );
     }
 
     private isUserLogin = ( obj: UserLogin ): obj is UserLogin => {
