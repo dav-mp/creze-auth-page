@@ -20,3 +20,9 @@ export interface UserConfirmMFA {
     session: string;
     userCode: string;
 }
+
+export interface UserVerifyMFA {
+    session: string;
+    email: string;
+    userCode: string;
+}

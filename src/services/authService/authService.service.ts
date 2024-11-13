@@ -1,5 +1,5 @@
 import axiosAuthInstance from '../axiosAuth/axiosAuthInstance.service'
-import { UserConfirm, UserConfirmMFA, UserLogin, UserRegister } from '../../core/interfaces/authInterfaces.interface';
+import { UserConfirm, UserConfirmMFA, UserLogin, UserRegister, UserVerifyMFA } from '../../core/interfaces/authInterfaces.interface';
 // import axios, { AxiosError } from 'axios';
 
 
@@ -112,6 +112,28 @@ export class AuthService{
      
         try {
             const response = await axiosAuthInstance.post('/confirmMFA', user, {
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            })
+    
+            console.log('CONFIRMMFA CORRECTO', response);
+            
+            return response.data
+            
+        } catch (error: any) {
+            
+            return Promise.reject(error.response.data)
+
+        }
+
+    }
+
+    authUserVerifyMFA = async ( user: UserVerifyMFA ) => {
+      
+
+        try {
+            const response = await axiosAuthInstance.post('/verifyMfaCode', user, {
                 headers: {
                     'Content-Type': 'application/json',
                 },

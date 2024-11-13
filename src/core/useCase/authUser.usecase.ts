@@ -1,5 +1,5 @@
 import { AuthService } from '../../services/authService/authService.service';
-import { UserConfirm, UserLogin, UserRegister, UserConfirmMFA } from '../interfaces/authInterfaces.interface';
+import { UserConfirm, UserLogin, UserRegister, UserConfirmMFA, UserVerifyMFA } from '../interfaces/authInterfaces.interface';
 
 
 
@@ -77,6 +77,24 @@ export class AuthUserUseCase{
             
             const userConfirm = await this.authService.authUserConfirmMFA( data )
     
+            return userConfirm
+
+        } catch (error) {
+            return Promise.reject(error)
+        }
+
+    }
+
+    authUserVerifyMFA = async ( user: UserVerifyMFA ) => {
+
+        if (!this.isUserVerifyMFA( user )) {
+            throw Error('Datos de usuario no validos.')
+        }
+
+        try {
+            
+            const userConfirm = await this.authService.authUserVerifyMFA( user )
+    
             console.log('userConfirm', userConfirm);
             
             return userConfirm
@@ -84,7 +102,15 @@ export class AuthUserUseCase{
         } catch (error) {
             return Promise.reject(error)
         }
+      
+    }
 
+    private isUserVerifyMFA = ( obj: UserVerifyMFA ): obj is UserVerifyMFA => {
+        return (
+            typeof obj.session === "string" &&
+            typeof obj.userCode === "string" && 
+            typeof obj.email === "string" 
+        );
     }
 
     private isUserConfirmMFA = ( obj: UserConfirmMFA ): obj is UserConfirmMFA => {
