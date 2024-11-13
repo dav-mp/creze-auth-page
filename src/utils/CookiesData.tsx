@@ -15,3 +15,7 @@ export const getCookiesData = ( field: string ): string | null => {
     return token ?? null
 
 }
+
+export const deleteCookiesData = ( field: string ) => {
+    Cookies.remove( field )
+}
