@@ -14,6 +14,7 @@ const UserConfirmMFA: React.FC = () => {
 
     const { goTo } = useNavigationUtil()
 
+    const [allRight, setAllRight] = useState(false)
     const [secretCodeQr, setSecretCodeQr] = useState(getSecretCodeAction())
     const [sessionToken] = useState(getUserSessionAction())
     const [openLoading, setopenLoading] = useState(false)
@@ -56,6 +57,7 @@ const UserConfirmMFA: React.FC = () => {
                     severity: ServerityLevelSnackbar.SUCCESS,
                     text: "User confrim MFA successfully."
                 })
+                setAllRight(true)
                 setTimeout(() => {
                     goTo( "/login" )
                 }, 2000);
@@ -116,6 +118,7 @@ const UserConfirmMFA: React.FC = () => {
                     color="primary"
                     fullWidth
                     onClick={returnLogin}
+                    disabled={allRight}
                     >
                     {/* {isLoading ? <CircularProgress size={24} /> : 'Confirm'} */}
                     Back to login

@@ -68,6 +68,7 @@ const UserRegister = () => {
 
     const { goTo } = useNavigationUtil()
 
+    const [allRight, setAllRight] = useState(false)
     const [showPassword, setShowPassword] = useState(false);
     const [openLoading, setopenLoading] = useState(false)
     const [snackBarContent, setsnackBarContent] = useState<SnackBarProps>({
@@ -110,8 +111,11 @@ const UserRegister = () => {
                     text: "User created successfully."
                 })
                 setCookiesData( "email", data.email )
+                setAllRight(true)
                 // TODO: Cambiar a userConfirm. Por ahora sera directo a Login por tema de limites de email enviados desde cognito. No se pueden confirmar usuarios
-                goTo( "/login" )
+                setTimeout(() => {
+                    goTo( "/login" )
+                }, 2000);
             })
             .catch(err => {
                 setsnackBarContent({
@@ -215,6 +219,7 @@ const UserRegister = () => {
                             fullWidth
                             variant="contained"
                             sx={{ mt: 3, mb: 2 }}
+                            disabled={allRight}
                         >
                             Sign In
                         </Button>

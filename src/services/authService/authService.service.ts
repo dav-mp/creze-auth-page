@@ -139,8 +139,6 @@ export class AuthService{
                 },
             })
     
-            console.log('CONFIRMMFA CORRECTO', response);
-            
             return response.data
             
         } catch (error: any) {

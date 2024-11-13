@@ -109,8 +109,6 @@ export class AuthUserUseCase{
             
             const userConfirm = await this.authService.authLogout( session )
     
-            console.log('userConfirm', userConfirm);
-            
             return userConfirm
 
         } catch (error) {
