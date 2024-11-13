@@ -45,3 +45,11 @@ export const UserVerifyMfaApplication = async ( user: UserVerifyMFA ) => {
     return Promise.reject(error);
   }
 }
+
+export const UserLogoutApplication = async ( session: string ) => {
+  try {
+    return await authUserUseCase.authUserLogout( session )
+  } catch (error) {
+    return Promise.reject(error);
+  }
+}

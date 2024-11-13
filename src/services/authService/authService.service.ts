@@ -151,5 +151,26 @@ export class AuthService{
 
     }
 
+    authLogout = async ( session: string ) => {
+      
+
+        try {
+            const response = await axiosAuthInstance.post('/userLogout', {session}, {
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            })
+    
+            
+            return response.data
+            
+        } catch (error: any) {
+            
+            return Promise.reject(error.response.data)
+
+        }
+
+    }
+
 
 }

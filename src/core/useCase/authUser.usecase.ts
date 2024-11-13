@@ -95,6 +95,20 @@ export class AuthUserUseCase{
             
             const userConfirm = await this.authService.authUserVerifyMFA( user )
     
+            return userConfirm
+
+        } catch (error) {
+            return Promise.reject(error)
+        }
+      
+    }
+
+    authUserLogout = async ( session: string ) => {
+
+        try {
+            
+            const userConfirm = await this.authService.authLogout( session )
+    
             console.log('userConfirm', userConfirm);
             
             return userConfirm
