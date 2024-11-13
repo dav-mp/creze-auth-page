@@ -70,6 +70,7 @@ const LoginRegister = () => {
     const { goTo } = useNavigationUtil()
     const { addUserTokenAction, addUserSecretCodeAction, addUserSessionAction } = useUserActions()
 
+    const [allRight, setAllRight] = useState(false)
     const [showPassword, setShowPassword] = useState(false);
     const [openLoading, setopenLoading] = useState(false)
     const [snackBarContent, setsnackBarContent] = useState<SnackBarProps>({
@@ -105,7 +106,6 @@ const LoginRegister = () => {
 
         UserLoginApplication( data )
             .then(user => {
-                console.log(user);
                 setsnackBarContent({
                     isOpen: true,
                     severity: ServerityLevelSnackbar.SUCCESS,
@@ -113,7 +113,10 @@ const LoginRegister = () => {
                 })
                 setCookiesData( data.email )
                 addUserTokenAction( { token: user.csrf_token } )
-                goToMFA( user.data[0].message, user.data[0]?.session, user.data[0]?.secretode )
+                setAllRight(true)
+                setTimeout(() => {
+                    goToMFA( user.data[0].message, user.data[0]?.session, user.data[0]?.secretode )
+                }, 2000)
                 // goTo( "/userConfirm" )
             })
             .catch(err => {
@@ -137,17 +140,22 @@ const LoginRegister = () => {
     })
 
     const goToMFA = ( type: string, session: string, secretCode: string = '' ) => {
-
+        addUserSessionAction( { session } )
         switch (type) {
             case 'MFA_SETUP':
                 
                 addUserSecretCodeAction( { secretCode } )
-                addUserSessionAction( { session } )
 
                 goTo('/confirmMFA')
 
                 break;
-        
+            
+            case 'SOFTWARE_TOKEN_MFA':
+
+                goTo('/verifyMFA')
+
+                break;
+
             default:
                 break;
         }
@@ -227,6 +235,7 @@ const LoginRegister = () => {
                             fullWidth
                             variant="contained"
                             sx={{ mt: 3, mb: 2 }}
+                            disabled={allRight}
                         >
                             Sign In
                         </Button>

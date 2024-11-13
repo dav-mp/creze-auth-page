@@ -1,62 +1,58 @@
 import React, { useEffect, useState } from 'react';
-import { Box, Card, CardContent, Typography, Button, Backdrop, CircularProgress } from '@mui/material';
-import { QRCodeSVG } from 'qrcode.react';
-import { useUserActions } from '../../hooks/store/useUserActionsStore';
+import { Box, Card, CardContent, Typography, Button, CircularProgress, Backdrop } from '@mui/material';
 import useNavigationUtil from '../../../utils/GotoPath';
 import OtpInput from '../../components/OTPinput/OtpInput';
-import { UserConfirmMfaApplication } from '../../../application/authUser/authUser.application';
-import SnackBarMessage, { ServerityLevelSnackbar, SnackBarProps } from '../../components/SnackBar/snackBar';
+import { UserVerifyMfaApplication } from '../../../application/authUser/authUser.application';
 import { getCookiesData } from '../../../utils/CookiesData';
+import { useUserActions } from '../../hooks/store/useUserActionsStore';
+import SnackBarMessage, { ServerityLevelSnackbar, SnackBarProps } from '../../components/SnackBar/snackBar';
 
-const UserConfirmMFA: React.FC = () => {
+const UserVerifyMFA: React.FC = () => {
 
-    const { getSecretCodeAction, getUserSessionAction } = useUserActions()
+    const userEmail = getCookiesData( "email" )
+    
+    const { getUserSessionAction } = useUserActions()
 
     const { goTo } = useNavigationUtil()
 
-    const [secretCodeQr, setSecretCodeQr] = useState(getSecretCodeAction())
-    const [sessionToken, setSessionToken] = useState(getUserSessionAction())
+    const [allRight, setAllRight] = useState(false)
+    const [userSession, setuserSession] = useState(getUserSessionAction())
     const [openLoading, setopenLoading] = useState(false)
     const [snackBarContent, setsnackBarContent] = useState<SnackBarProps>({
         isOpen: false,
         severity: ServerityLevelSnackbar.INFO,
         text: ''
     })
-
     const { isOpen, severity, text } = snackBarContent
 
-
     useEffect(() => {
-
-        const email = getCookiesData( "email" ) ?? ''
-        
-        
-        if(secretCodeQr === '' || email === '' || sessionToken === '') {
+      
+        if (userSession === '') {
             goTo('/login')
         }
-
-        setSecretCodeQr(`otpauth://totp/AplicacionAuthCreze:${email}?secret=${secretCodeQr}&issuer=AplicacionAuthCreze`)
-
+      
     }, [])
     
 
     const handleConfirm = ( code: string ) => {
-
         setopenLoading(true)
-
-        const sendData = {
-            session: sessionToken,
+        
+        const user = {
+            email: userEmail ?? '',
             userCode: code,
+            session: userSession,
         }
 
-        UserConfirmMfaApplication( sendData )
+
+        UserVerifyMfaApplication( user )
             .then(user => {
                 console.log(user);
                 setsnackBarContent({
                     isOpen: true,
                     severity: ServerityLevelSnackbar.SUCCESS,
-                    text: "User confrim MFA successfully."
+                    text: "User verify MFA successfully."
                 })
+                setAllRight(true)
                 setTimeout(() => {
                     goTo( "/login" )
                 }, 2000);
@@ -77,11 +73,13 @@ const UserConfirmMFA: React.FC = () => {
                     })
                 }, 6000);
             })
+            
 
+        
     };
 
     const returnLogin = () => {
-      goTo('/login')
+        goTo('/login')
     }
 
     return (
@@ -100,28 +98,25 @@ const UserConfirmMFA: React.FC = () => {
             minHeight="95vh"
             >
             <Card sx={{ maxWidth: 400, padding: 3 }}>
-                <CardContent style={{ textAlign: 'center' }}>
-                <Typography variant="h5" component="div" gutterBottom>
-                    Scan QR code to confirm MFA
-                </Typography>
-                <Typography variant="body2" color="text.secondary" gutterBottom>
-                    Please scan the QR code with your authentication app and enter the 6-digit code.
-                </Typography>
-                <Box display="flex" justifyContent="center" my={2}>
-                    <QRCodeSVG value={secretCodeQr} size={128} />
-                </Box>
-                <OtpInput handleConfirm={handleConfirm}/>
-                <Box mt={2}>
-                    <Button
-                    variant="contained"
-                    color="primary"
-                    fullWidth
-                    onClick={returnLogin}
-                    >
-                    {/* {isLoading ? <CircularProgress size={24} /> : 'Confirm'} */}
-                    Back to login
-                    </Button>
-                </Box>
+                <CardContent sx={{ gap: 2 }} style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flexFlow: 'column' }}>
+                    <Typography variant="h5" component="div" gutterBottom>
+                        Verify Your Identity
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary" gutterBottom>
+                        Please enter the verification code that appears in your authentication app.
+                    </Typography>
+                    <OtpInput handleConfirm={handleConfirm}/>
+                    <Box mt={2}>
+                        <Button
+                        variant="contained"
+                        color="primary"
+                        fullWidth
+                        onClick={returnLogin}
+                        disabled={allRight}>
+                            {/* {isLoading ? <CircularProgress size={24} /> : 'Confirm'} */}
+                            Back to login
+                        </Button>
+                    </Box>
                 </CardContent>
             </Card>
             </Box>
@@ -129,4 +124,4 @@ const UserConfirmMFA: React.FC = () => {
     );
 };
 
-export default UserConfirmMFA;
+export default UserVerifyMFA;
