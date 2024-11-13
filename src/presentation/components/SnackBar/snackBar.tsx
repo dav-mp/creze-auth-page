@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import Snackbar, { SnackbarCloseReason } from '@mui/material/Snackbar';
+import Snackbar from '@mui/material/Snackbar';
 import Alert from '@mui/material/Alert';
 
 export interface SnackBarProps {
@@ -29,27 +29,11 @@ const SnackBarMessage = ( props: SnackBarProps ) => {
     setsnackBarContent( props )
   }, [props])
   
-
-
-  const handleClose = (
-    event?: React.SyntheticEvent | Event,
-    reason?: SnackbarCloseReason,
-  ) => {
-    if (reason === 'clickaway') {
-      return;
-    }
-
-    setsnackBarContent({
-      ...snackBarContent,
-      isOpen: false
-    });
-  };
   
 
   return (
     <Snackbar open={isOpen} autoHideDuration={1000} >
         <Alert
-          onClose={handleClose}
           severity={severity}
           variant="filled"
           sx={{ width: '100%' }}
