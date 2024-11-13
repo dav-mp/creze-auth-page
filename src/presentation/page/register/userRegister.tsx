@@ -110,7 +110,7 @@ const UserRegister = () => {
                     severity: ServerityLevelSnackbar.SUCCESS,
                     text: "User created successfully."
                 })
-                setCookiesData( data.email )
+                setCookiesData( "email", data.email )
                 // TODO: Cambiar a userConfirm. Por ahora sera directo a Login por tema de limites de email enviados desde cognito. No se pueden confirmar usuarios
                 goTo( "/login" )
             })

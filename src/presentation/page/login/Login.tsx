@@ -111,7 +111,7 @@ const LoginRegister = () => {
                     severity: ServerityLevelSnackbar.SUCCESS,
                     text: "User successfully logged in."
                 })
-                setCookiesData( data.email )
+                setCookiesData( "email", data.email )
                 addUserTokenAction( { token: user.csrf_token } )
                 setAllRight(true)
                 setTimeout(() => {

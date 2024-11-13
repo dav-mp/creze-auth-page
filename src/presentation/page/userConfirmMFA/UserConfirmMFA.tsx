@@ -50,8 +50,7 @@ const UserConfirmMFA: React.FC = () => {
         }
 
         UserConfirmMfaApplication( sendData )
-            .then(user => {
-                console.log(user);
+            .then(() => {
                 setsnackBarContent({
                     isOpen: true,
                     severity: ServerityLevelSnackbar.SUCCESS,

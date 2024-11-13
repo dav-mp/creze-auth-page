@@ -3,7 +3,7 @@ import { Box, Card, CardContent, Typography, Button, CircularProgress, Backdrop 
 import useNavigationUtil from '../../../utils/GotoPath';
 import OtpInput from '../../components/OTPinput/OtpInput';
 import { UserVerifyMfaApplication } from '../../../application/authUser/authUser.application';
-import { getCookiesData } from '../../../utils/CookiesData';
+import { getCookiesData, setCookiesData } from '../../../utils/CookiesData';
 import { useUserActions } from '../../hooks/store/useUserActionsStore';
 import SnackBarMessage, { ServerityLevelSnackbar, SnackBarProps } from '../../components/SnackBar/snackBar';
 
@@ -46,15 +46,15 @@ const UserVerifyMFA: React.FC = () => {
 
         UserVerifyMfaApplication( user )
             .then(user => {
-                console.log(user);
                 setsnackBarContent({
                     isOpen: true,
                     severity: ServerityLevelSnackbar.SUCCESS,
                     text: "User verify MFA successfully."
                 })
                 setAllRight(true)
+                setCookiesData( "AccessToken", user.AuthenticationResult.AccessToken )
                 setTimeout(() => {
-                    goTo( "/login" )
+                    goTo( "/main" )
                 }, 2000);
             })
             .catch(err => {
